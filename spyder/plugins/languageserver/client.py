@@ -365,12 +365,15 @@ class LSPClient(QObject, LSPMethodProviderMixIn):
         self.initialized = True
         server_capabilites = server_capabilites['capabilities']
 
-        if isinstance(server_capabilites['textDocumentSync'], int):
-            kind = server_capabilites['textDocumentSync']
-            server_capabilites['textDocumentSync'] = TEXT_DOCUMENT_SYNC_OPTIONS
-            server_capabilites['textDocumentSync']['change'] = kind
-        if server_capabilites['textDocumentSync'] is None:
-            server_capabilites.pop('textDocumentSync')
+        try:
+            if isinstance(server_capabilites['textDocumentSync'], int):
+                kind = server_capabilites['textDocumentSync']
+                server_capabilites['textDocumentSync'] = TEXT_DOCUMENT_SYNC_OPTIONS
+                server_capabilites['textDocumentSync']['change'] = kind
+            if server_capabilites['textDocumentSync'] is None:
+                server_capabilites.pop('textDocumentSync')
+        except KeyError:
+            pass
 
         self.server_capabilites.update(server_capabilites)
 
